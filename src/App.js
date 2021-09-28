@@ -4,8 +4,9 @@ import Main from './components/Main/Main'
 import Navbar from './components/Navbar/Navbar'
 import Sidebar from './components/Sidebar/Sidebar'
 import CssBaseline from '@mui/material/CssBaseline'
-import { Grid } from '@mui/material'
+import { Grid, Box } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import './App.css'
 
 const defaultSpeed = 5
 const defaultNumBar = 50
@@ -33,8 +34,7 @@ function App() {
   const [isRunning, setIsRunning] = useState(false)
 
   return (
-    <div>
-      <CssBaseline />
+    <Box>
       <Navbar
         algorithmType={algorithmType}
         setAlgorithmType={setAlgorithmType}
@@ -58,6 +58,7 @@ function App() {
               numSwap={numSwap}
               setNumSwap={setNumSwap}
               resetCounter={resetCounter}
+              setResetCounter={setResetCounter}
               isRunning={isRunning}
               setIsRunning={setIsRunning}
             />
@@ -83,7 +84,7 @@ function App() {
           </Grid>
         </Grid>
       </MobileView>
-    </div>
+    </Box>
   )
 }
 

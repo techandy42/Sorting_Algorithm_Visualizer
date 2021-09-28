@@ -1,10 +1,17 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { BUBBLE, INSERTION, SELECTION, MERGE, QUICK, HEAP } from '../../constants/algorithmTypes'
+import { cyan, yellow, deepOrange, lightGreen, blue } from '@mui/material/colors'
 
 const defaultBarWidth = 720
 const defaultBarMarginSide = 120
+
+const SKYBLUE = cyan['A400']
+const YELLOW = yellow['A400']
+const RED = deepOrange['A400']
+const GREEN = lightGreen['A400']
+const BLUE = blue['A400']
 
 const DesktopView = styled('div')(({ theme }) => ({
   display: 'none',
@@ -24,34 +31,98 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-export default function Main({ algorithmType, speed, numBar, numSwap, setNumSwap, resetCounter, isRunning, setIsRunning }) {
+function handleSleepDuration(speed) {
+  switch (speed) {
+    case 10:
+      return 1
+    case 9:
+      return 5
+    case 8:
+      return 10
+    case 7:
+      return 15
+    case 6:
+      return 25
+    case 5:
+      return 50
+    case 4:
+      return 75
+    case 3:
+      return 100
+    case 2:
+      return 125
+    case 1:
+      return 150
+    default:
+      return 100
+  }
+}
+
+function isBarsSorted(bars) {
+  for (let i = 0; i < bars.length - 1; i++) {
+    if (bars[i].height > bars[i + 1].height) {
+      return false
+    }
+  }
+  return true
+}
+
+export default function Main({
+  algorithmType,
+  speed,
+  numBar,
+  numSwap,
+  setNumSwap,
+  resetCounter,
+  setResetCounter,
+  isRunning,
+  setIsRunning,
+}) {
   const [barHeight, setBarHeight] = useState(window.innerHeight * 0.8)
   const [barWidth, setBarWidth] = useState(window.innerHeight * 0.6)
   const [barMarginSide, setBarMarginSide] = useState(window.innerHeight * 0.1)
   const [isSorting, setIsSorting] = useState(false)
-  const [sleepDuration, setSleepDuration] = useState(510 - speed * 50)
+  const [numCompare, setNumCompare] = useState(0)
+
+  let sleepDuration = 100
+  sleepDuration = useMemo(() => {
+    return handleSleepDuration(speed)
+  }, [speed])
 
   let bars = []
   bars = useMemo(() => {
-    const newBars = []
+    let newBars = []
     for (let i = 0; i < numBar; i++) {
-      newBars.push({ height: Math.ceil(Math.random() * barHeight), color: 'skyblue' })
+      newBars.push({ height: Math.floor(Math.random() * 90 + 10), color: SKYBLUE })
+    }
+    if (isBarsSorted(bars)) {
+      newBars = newBars.reverse()
     }
     return newBars
   }, [numBar, resetCounter])
 
+  if (!isRunning) {
+    if (isBarsSorted(bars)) {
+      for (let i = 0; i < bars.length; i++) {
+        bars[i].color = GREEN
+      }
+    }
+  }
+
   const bubbleSort = async () => {
     let len = bars.length
     let checked
+    let loopCounter = 0
     do {
       checked = false
-      for (let i = 0; i < len - 1; i++) {
-        bars[i].color = 'yellow'
-        bars[i + 1].color = 'yellow'
-        await sleep(sleepDuration * 2)
+      for (let i = 0; i < len - 1 - loopCounter; i++) {
+        bars[i].color = YELLOW
+        bars[i + 1].color = YELLOW
+        await sleep(sleepDuration)
+        setNumCompare(numCompare + 1)
         if (bars[i].height > bars[i + 1].height) {
-          bars[i].color = 'red'
-          bars[i + 1].color = 'red'
+          bars[i].color = RED
+          bars[i + 1].color = RED
           await sleep(sleepDuration)
           let temp = bars[i]
           bars[i] = bars[i + 1]
@@ -60,53 +131,68 @@ export default function Main({ algorithmType, speed, numBar, numSwap, setNumSwap
           setNumSwap((prevState, props) => prevState + 1)
           checked = true
         }
-        bars[i].color = 'skyblue'
-        bars[i + 1].color = 'skyblue'
+        bars[i].color = SKYBLUE
+        bars[i + 1].color = SKYBLUE
       }
+      bars[len - 1 - loopCounter].color = GREEN
+      loopCounter += 1
     } while (checked)
+    setIsSorting(false)
+    setIsRunning(false)
   }
 
   const insertionSort = async () => {
-    let n = bars.length
-    for (let i = 1; i < n; i++) {
-      await sleep(11 - speed)
+    let len = bars.length
+    for (let i = 1; i < len; i++) {
       let temp = bars[i]
+      bars[i].color = YELLOW
+      bars[i - 1].color = YELLOW
       let j = i - 1
+      await sleep(sleepDuration * 2)
+      setNumCompare(numCompare + 1)
       while (j > -1 && temp.height < bars[j].height) {
         bars[j + 1] = bars[j]
-        j--
+        bars[j].color = RED
+        bars[j + 1].color = RED
+        await sleep(sleepDuration * 2)
         setNumSwap((prevState, props) => prevState + 1)
+        bars[j].color = BLUE
+        bars[j + 1].color = BLUE
+        j--
       }
       bars[j + 1] = temp
+      for (let k = 0; k <= j + 1; k++) {
+        if (bars[k].color !== BLUE) {
+          bars[k].color = BLUE
+        }
+      }
     }
+    setIsSorting(false)
+    setIsRunning(false)
   }
 
   const selectionSort = async () => {
     let n = bars.length
 
     for (let i = 0; i < n; i++) {
-      await sleep(11 - speed)
       let min = i
       for (let j = i + 1; j < n; j++) {
+        await sleep(sleepDuration)
+        setNumCompare(numCompare + 1)
         if (bars[j].height < bars[min].height) {
           min = j
         }
       }
       if (min != i) {
+        await sleep(sleepDuration)
+        setNumSwap((prevState, props) => prevState + 1)
         let temp = bars[i]
         bars[i] = bars[min]
         bars[min] = temp
-        setNumSwap((prevState, props) => prevState + 1)
       }
     }
-    return bars
-  }
-
-  const handleSortingCompleted = async () => {
-    for (let i = 0; i < bars.length; i++) {
-      await sleep(1)
-      bars[i].color = 'lightgreen'
-    }
+    setIsSorting(false)
+    setIsRunning(false)
   }
 
   useEffect(() => {
@@ -129,8 +215,6 @@ export default function Main({ algorithmType, speed, numBar, numSwap, setNumSwap
         case HEAP:
           break
       }
-      setIsSorting(false)
-      setIsRunning(false)
     }
   }, [isRunning])
 
@@ -141,7 +225,7 @@ export default function Main({ algorithmType, speed, numBar, numSwap, setNumSwap
   }
 
   return (
-    <div>
+    <Box sx={{ m: 0 }}>
       <DesktopView>
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', transform: 'rotateX(180deg)', mt: '2rem', height: barHeight }}>
@@ -149,7 +233,7 @@ export default function Main({ algorithmType, speed, numBar, numSwap, setNumSwap
               <>
                 <div
                   style={{
-                    height: bar.height,
+                    height: bar.height * (barHeight / 100),
                     width: defaultBarWidth / numBar,
                     backgroundColor: bar.color,
                     marginLeft: defaultBarMarginSide / numBar,
@@ -157,7 +241,7 @@ export default function Main({ algorithmType, speed, numBar, numSwap, setNumSwap
                     textAlign: 'center',
                   }}
                 >
-                  {numBar < 20 && <p style={{ transform: 'rotateX(180deg)' }}>{bar.height}</p>}
+                  {numBar < 20 && <Typography style={{ transform: 'rotateX(180deg)' }}>{bar.height}</Typography>}
                 </div>
               </>
             ))}
@@ -171,7 +255,7 @@ export default function Main({ algorithmType, speed, numBar, numSwap, setNumSwap
               <>
                 <div
                   style={{
-                    height: bar.height,
+                    height: bar.height * (barHeight / 100),
                     width: barWidth / numBar,
                     backgroundColor: bar.color,
                     marginLeft: barMarginSide / numBar,
@@ -183,6 +267,6 @@ export default function Main({ algorithmType, speed, numBar, numSwap, setNumSwap
           </Box>
         </Box>
       </MobileView>
-    </div>
+    </Box>
   )
 }

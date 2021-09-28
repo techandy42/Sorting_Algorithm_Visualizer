@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { BUBBLE, INSERTION, MERGE, QUICK, HEAP, SELECTION } from '../../constants/algorithmTypes'
-import { Slider, Box, AppBar, Toolbar, Typography, ButtonGroup, Button, Input } from '@mui/material'
+import { Slider, Box, AppBar, Toolbar, Typography, ButtonGroup, Button, Input, CssBaseline } from '@mui/material'
 import { styled } from '@mui/material/styles'
 
 const DesktopView = styled('div')(({ theme }) => ({
@@ -56,6 +56,11 @@ const CustomSlider = styled(Slider)({
   },
 })
 
+const minSpeed = 1
+const maxSpeed = 10
+const minNumBar = 5
+const maxNumBar = 200
+
 export default function Navbar({
   algorithmType,
   setAlgorithmType,
@@ -70,59 +75,92 @@ export default function Navbar({
   setNumSwap,
 }) {
   const handleSpeedChange = (e, newValue) => {
-    setSpeed(newValue)
+    if (!isRunning) {
+      setSpeed(newValue)
+    }
+  }
+
+  const handleSpeedToggleChange = (e) => {
+    const newValue = parseInt(e.target.value)
+    if (!isRunning && minSpeed <= newValue && newValue <= maxSpeed) {
+      setSpeed(newValue)
+    }
   }
 
   const handleNumBarChange = (e, newValue) => {
-    setNumBar(newValue)
+    if (!isRunning) {
+      setNumBar(newValue)
+    }
+  }
+
+  const handleNumBarToggleChange = (e) => {
+    const newValue = parseInt(e.target.value)
+    if (!isRunning && minNumBar <= newValue && newValue <= maxNumBar) {
+      setNumBar(newValue)
+    }
+  }
+
+  const handleAlgorithmChange = (algorithmType) => {
+    if (!isRunning) {
+      setAlgorithmType(algorithmType)
+    }
+  }
+
+  const handleReset = () => {
+    if (!isRunning) {
+      setResetCounter(resetCounter + 1)
+      setNumSwap(0)
+    }
+  }
+
+  const handleIsRunningChange = () => {
+    if (!isRunning) {
+      setIsRunning(true)
+    } else {
+      window.location.reload()
+    }
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box id="navbar" sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
           <Typography sx={{ flexGrow: 1 }}>SortingPro</Typography>
           <DesktopView>
             <ButtonGroup variant="contained">
-              <Button onClick={() => setAlgorithmType(BUBBLE)} sx={{ bgcolor: algorithmType === BUBBLE ? 'red' : 'blue' }}>
+              <Button onClick={() => handleAlgorithmChange(BUBBLE)} sx={{ bgcolor: algorithmType === BUBBLE ? 'red' : 'blue' }}>
                 Bubble
               </Button>
-              <Button onClick={() => setAlgorithmType(INSERTION)} sx={{ bgcolor: algorithmType === INSERTION ? 'red' : 'blue' }}>
+              <Button onClick={() => handleAlgorithmChange(INSERTION)} sx={{ bgcolor: algorithmType === INSERTION ? 'red' : 'blue' }}>
                 Insertion
               </Button>
-              <Button onClick={() => setAlgorithmType(SELECTION)} sx={{ bgcolor: algorithmType === SELECTION ? 'red' : 'blue' }}>
+              <Button onClick={() => handleAlgorithmChange(SELECTION)} sx={{ bgcolor: algorithmType === SELECTION ? 'red' : 'blue' }}>
                 Selection
               </Button>
-              <Button onClick={() => setAlgorithmType(MERGE)} sx={{ bgcolor: algorithmType === MERGE ? 'red' : 'blue' }}>
+              <Button onClick={() => handleAlgorithmChange(MERGE)} sx={{ bgcolor: algorithmType === MERGE ? 'red' : 'blue' }}>
                 Merge
               </Button>
-              <Button onClick={() => setAlgorithmType(QUICK)} sx={{ bgcolor: algorithmType === QUICK ? 'red' : 'blue' }}>
+              <Button onClick={() => handleAlgorithmChange(QUICK)} sx={{ bgcolor: algorithmType === QUICK ? 'red' : 'blue' }}>
                 Quick
               </Button>
-              <Button onClick={() => setAlgorithmType(HEAP)} sx={{ bgcolor: algorithmType === HEAP ? 'red' : 'blue' }}>
+              <Button onClick={() => handleAlgorithmChange(HEAP)} sx={{ bgcolor: algorithmType === HEAP ? 'red' : 'blue' }}>
                 Heap
               </Button>
             </ButtonGroup>
             <Typography>Speed</Typography>
-            <CustomSlider value={speed} onChange={handleSpeedChange} min={1} max={10} sx={{ width: '5rem' }} />
-            <Input type="number" value={speed} min={1} max={10} onChange={(e) => setSpeed(e.target.value)} />
+            <CustomSlider value={speed} onChange={handleSpeedChange} min={minSpeed} max={maxSpeed} sx={{ width: '5rem' }} />
+            <Input type="number" value={speed} onChange={handleSpeedToggleChange} />
             <Typography>Number of Bars</Typography>
-            <CustomSlider value={numBar} onChange={handleNumBarChange} min={2} max={200} sx={{ width: '5rem' }} />
-            <Input type="number" value={numBar} min={2} max={200} onChange={(e) => setNumBar(e.target.value)} />
+            <CustomSlider value={numBar} onChange={handleNumBarChange} min={minNumBar} max={maxNumBar} sx={{ width: '5rem' }} />
+            <Input type="number" value={numBar} onChange={handleNumBarToggleChange} />
           </DesktopView>
           <MobileView>
             <Button variant="contained">Menu</Button>
           </MobileView>
-          <Button variant="contained" onClick={() => setIsRunning(!isRunning)} sx={{ bgcolor: isRunning ? 'red' : 'green' }}>
+          <Button variant="contained" onClick={handleIsRunningChange} sx={{ bgcolor: isRunning ? 'red' : 'green' }}>
             {isRunning ? 'Cancel' : 'Run'}
           </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              setResetCounter(resetCounter + 1)
-              setNumSwap(0)
-            }}
-          >
+          <Button variant="contained" onClick={handleReset}>
             Reset
           </Button>
         </Toolbar>
