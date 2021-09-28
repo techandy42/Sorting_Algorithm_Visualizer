@@ -1,0 +1,6 @@
+export const BUBBLE = 'BUBBLE'
+export const INSERTION = 'INSERTION'
+export const SELECTION = 'SELECTION'
+export const MERGE = 'MERGE'
+export const QUICK = 'QUICK'
+export const HEAP = 'HEAP'
