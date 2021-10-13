@@ -10,14 +10,14 @@ const BLUE = blue[600]
 
 const DesktopView = styled('div')(({ theme }) => ({
   display: 'none',
-  [theme.breakpoints.up('xl')]: {
+  [theme.breakpoints.up('md')]: {
     display: 'flex',
   },
 }))
 
 const MobileView = styled('div')(({ theme }) => ({
   display: 'flex',
-  [theme.breakpoints.up('xl')]: {
+  [theme.breakpoints.up('md')]: {
     display: 'none',
   },
 }))
