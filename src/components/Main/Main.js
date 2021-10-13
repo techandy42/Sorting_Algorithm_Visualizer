@@ -82,7 +82,6 @@ export default function Main({
   const [barWidth, setBarWidth] = useState(window.innerHeight * 0.6)
   const [barMarginSide, setBarMarginSide] = useState(window.innerHeight * 0.1)
   const [isSorting, setIsSorting] = useState(false)
-  const [numCompare, setNumCompare] = useState(0)
 
   let sleepDuration = 100
   sleepDuration = useMemo(() => {
@@ -109,86 +108,60 @@ export default function Main({
     }
   }
 
-  const bubbleSort = async () => {
+  const bubbleSort = async (bars) => {
     let len = bars.length
     let checked
     let loopCounter = 0
     do {
       checked = false
       for (let i = 0; i < len - 1 - loopCounter; i++) {
-        bars[i].color = YELLOW
-        bars[i + 1].color = YELLOW
-        await sleep(sleepDuration)
-        setNumCompare(numCompare + 1)
         if (bars[i].height > bars[i + 1].height) {
-          bars[i].color = RED
-          bars[i + 1].color = RED
           await sleep(sleepDuration)
           let temp = bars[i]
           bars[i] = bars[i + 1]
           bars[i + 1] = temp
-          await sleep(sleepDuration)
           setNumSwap((prevState, props) => prevState + 1)
           checked = true
         }
-        bars[i].color = SKYBLUE
-        bars[i + 1].color = SKYBLUE
       }
-      bars[len - 1 - loopCounter].color = GREEN
       loopCounter += 1
     } while (checked)
     setIsSorting(false)
     setIsRunning(false)
   }
 
-  const insertionSort = async () => {
+  const insertionSort = async (bars) => {
     let len = bars.length
     for (let i = 1; i < len; i++) {
       let temp = bars[i]
-      bars[i].color = YELLOW
-      bars[i - 1].color = YELLOW
       let j = i - 1
-      await sleep(sleepDuration * 2)
-      setNumCompare(numCompare + 1)
       while (j > -1 && temp.height < bars[j].height) {
         bars[j + 1] = bars[j]
-        bars[j].color = RED
-        bars[j + 1].color = RED
-        await sleep(sleepDuration * 2)
+        await sleep(sleepDuration)
         setNumSwap((prevState, props) => prevState + 1)
-        bars[j].color = BLUE
-        bars[j + 1].color = BLUE
         j--
       }
       bars[j + 1] = temp
-      for (let k = 0; k <= j + 1; k++) {
-        if (bars[k].color !== BLUE) {
-          bars[k].color = BLUE
-        }
-      }
     }
     setIsSorting(false)
     setIsRunning(false)
   }
 
-  const selectionSort = async () => {
+  const selectionSort = async (bars) => {
     let n = bars.length
-
     for (let i = 0; i < n; i++) {
       let min = i
       for (let j = i + 1; j < n; j++) {
-        await sleep(sleepDuration)
-        setNumCompare(numCompare + 1)
         if (bars[j].height < bars[min].height) {
           min = j
         }
       }
       if (min != i) {
-        await sleep(sleepDuration)
-        setNumSwap((prevState, props) => prevState + 1)
         let temp = bars[i]
         bars[i] = bars[min]
         bars[min] = temp
+        await sleep(sleepDuration)
+        setNumSwap((prevState, props) => prevState + 1)
       }
     }
     setIsSorting(false)
@@ -200,13 +173,13 @@ export default function Main({
       setIsSorting(true)
       switch (algorithmType) {
         case BUBBLE:
-          bubbleSort()
+          bubbleSort(bars)
           break
         case INSERTION:
-          insertionSort()
+          insertionSort(bars)
           break
         case SELECTION:
-          selectionSort()
+          selectionSort(bars)
           break
         case MERGE:
           break

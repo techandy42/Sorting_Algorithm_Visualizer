@@ -2,17 +2,22 @@ import React, { useState } from 'react'
 import { BUBBLE, INSERTION, MERGE, QUICK, HEAP, SELECTION } from '../../constants/algorithmTypes'
 import { Slider, Box, AppBar, Toolbar, Typography, ButtonGroup, Button, Input, CssBaseline } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import { deepOrange, lightGreen, blue } from '@mui/material/colors'
+
+const RED = deepOrange[600]
+const GREEN = lightGreen[600]
+const BLUE = blue[600]
 
 const DesktopView = styled('div')(({ theme }) => ({
   display: 'none',
-  [theme.breakpoints.up('lg')]: {
+  [theme.breakpoints.up('xl')]: {
     display: 'flex',
   },
 }))
 
 const MobileView = styled('div')(({ theme }) => ({
   display: 'flex',
-  [theme.breakpoints.up('lg')]: {
+  [theme.breakpoints.up('xl')]: {
     display: 'none',
   },
 }))
@@ -125,42 +130,42 @@ export default function Navbar({
     <Box id="navbar" sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography sx={{ flexGrow: 1 }}>SortingPro</Typography>
+          <Typography variant="h5" sx={{ flexGrow: 1, fontWeight: 300 }}>
+            SORTING_PRO
+          </Typography>
           <DesktopView>
-            <ButtonGroup variant="contained">
-              <Button onClick={() => handleAlgorithmChange(BUBBLE)} sx={{ bgcolor: algorithmType === BUBBLE ? 'red' : 'blue' }}>
+            <ButtonGroup variant="contained" sx={{ mx: 2 }}>
+              <Button onClick={() => handleAlgorithmChange(BUBBLE)} sx={{ bgcolor: algorithmType === BUBBLE ? RED : BLUE }}>
                 Bubble
               </Button>
-              <Button onClick={() => handleAlgorithmChange(INSERTION)} sx={{ bgcolor: algorithmType === INSERTION ? 'red' : 'blue' }}>
+              <Button onClick={() => handleAlgorithmChange(INSERTION)} sx={{ bgcolor: algorithmType === INSERTION ? RED : BLUE }}>
                 Insertion
               </Button>
-              <Button onClick={() => handleAlgorithmChange(SELECTION)} sx={{ bgcolor: algorithmType === SELECTION ? 'red' : 'blue' }}>
+              <Button onClick={() => handleAlgorithmChange(SELECTION)} sx={{ bgcolor: algorithmType === SELECTION ? RED : BLUE }}>
                 Selection
               </Button>
-              <Button onClick={() => handleAlgorithmChange(MERGE)} sx={{ bgcolor: algorithmType === MERGE ? 'red' : 'blue' }}>
+              {/* <Button onClick={() => handleAlgorithmChange(MERGE)} sx={{ bgcolor: algorithmType === MERGE ? RED : BLUE }}>
                 Merge
               </Button>
-              <Button onClick={() => handleAlgorithmChange(QUICK)} sx={{ bgcolor: algorithmType === QUICK ? 'red' : 'blue' }}>
+              <Button onClick={() => handleAlgorithmChange(QUICK)} sx={{ bgcolor: algorithmType === QUICK ? RED : BLUE }}>
                 Quick
               </Button>
-              <Button onClick={() => handleAlgorithmChange(HEAP)} sx={{ bgcolor: algorithmType === HEAP ? 'red' : 'blue' }}>
+              <Button onClick={() => handleAlgorithmChange(HEAP)} sx={{ bgcolor: algorithmType === HEAP ? RED : BLUE }}>
                 Heap
-              </Button>
+              </Button> */}
             </ButtonGroup>
-            <Typography>Speed</Typography>
+            <Typography sx={{ pt: 1, mx: 2 }}>Speed</Typography>
             <CustomSlider value={speed} onChange={handleSpeedChange} min={minSpeed} max={maxSpeed} sx={{ width: '5rem' }} />
-            <Input type="number" value={speed} onChange={handleSpeedToggleChange} />
-            <Typography>Number of Bars</Typography>
+            <Input sx={{ width: 80, mx: 2 }} type="number" value={speed} onChange={handleSpeedToggleChange} />
+            <Typography sx={{ pt: 1, mx: 2 }}>Number of Bars</Typography>
             <CustomSlider value={numBar} onChange={handleNumBarChange} min={minNumBar} max={maxNumBar} sx={{ width: '5rem' }} />
-            <Input type="number" value={numBar} onChange={handleNumBarToggleChange} />
+            <Input sx={{ width: 80, mx: 2 }} type="number" value={numBar} onChange={handleNumBarToggleChange} />
           </DesktopView>
-          <MobileView>
-            <Button variant="contained">Menu</Button>
-          </MobileView>
-          <Button variant="contained" onClick={handleIsRunningChange} sx={{ bgcolor: isRunning ? 'red' : 'green' }}>
+          <MobileView></MobileView>
+          <Button sx={{ ml: 2 }} variant="contained" onClick={handleIsRunningChange} sx={{ bgcolor: isRunning ? RED : GREEN }}>
             {isRunning ? 'Cancel' : 'Run'}
           </Button>
-          <Button variant="contained" onClick={handleReset}>
+          <Button sx={{ ml: 2 }} variant="contained" onClick={handleReset}>
             Reset
           </Button>
         </Toolbar>

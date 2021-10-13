@@ -38,10 +38,6 @@ export default function Sidebar({ algorithmType, numSwap }) {
           {content}
         </Typography>
       ))}
-      <Typography sx={{ fontWeight: 100, border: '1px dotted white', p: '0.5rem', m: '1rem' }}>
-        Generate Code for Javascript, Python, and Java
-      </Typography>
-      <Box sx={{ borderBottom: '1px solid white' }} />
     </Box>
   )
 }
