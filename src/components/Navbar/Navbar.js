@@ -144,15 +144,6 @@ export default function Navbar({
               <Button onClick={() => handleAlgorithmChange(SELECTION)} sx={{ bgcolor: algorithmType === SELECTION ? RED : BLUE }}>
                 Selection
               </Button>
-              {/* <Button onClick={() => handleAlgorithmChange(MERGE)} sx={{ bgcolor: algorithmType === MERGE ? RED : BLUE }}>
-                Merge
-              </Button>
-              <Button onClick={() => handleAlgorithmChange(QUICK)} sx={{ bgcolor: algorithmType === QUICK ? RED : BLUE }}>
-                Quick
-              </Button>
-              <Button onClick={() => handleAlgorithmChange(HEAP)} sx={{ bgcolor: algorithmType === HEAP ? RED : BLUE }}>
-                Heap
-              </Button> */}
             </ButtonGroup>
             <Typography sx={{ pt: 1, mx: 2 }}>Speed</Typography>
             <CustomSlider value={speed} onChange={handleSpeedChange} min={minSpeed} max={maxSpeed} sx={{ width: '5rem' }} />

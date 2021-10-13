@@ -10,14 +10,8 @@ function timeComplexity(algorithmType) {
       return 'O(n²)'
     case SELECTION:
       return 'O(n²)'
-    case MERGE:
-      return 'O(nlog(n))'
-    case QUICK:
-      return 'O(nlog(n))'
-    case HEAP:
-      return 'O(nlog(n))'
     default:
-      return ''
+      return 'O(n²)'
   }
 }
 

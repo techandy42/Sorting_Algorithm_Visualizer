@@ -181,12 +181,8 @@ export default function Main({
         case SELECTION:
           selectionSort(bars)
           break
-        case MERGE:
-          break
-        case QUICK:
-          break
-        case HEAP:
-          break
+        default:
+          bubbleSort(bars)
       }
     }
   }, [isRunning])
